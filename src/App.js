@@ -5,7 +5,7 @@ import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component'
 import Header from './components/header/header.component';
-import {auth} from './firebase/firebase.utils';
+import {auth, createUserProfileDocument} from './firebase/firebase.utils';
 
 class App extends React.Component {
   constructor(){
@@ -20,11 +20,10 @@ class App extends React.Component {
 
   componentDidMount(){
     //Listens to changes in authentication on firebase - uses an Open Subscription, whenever there is a change in authentication (e.g. a user logs in/out) firebase sends a message saying the authentication state has changed
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(user =>{
-      //Updates the app state with user account info - takes the account and authentication info in the message sent from firebase and updates the app state using this information
-      this.setState({currentUser: user});
-      console.log(user);
-    })
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async user =>{
+      //Executes the create a new user function - passes the user authentication object we get from firebase into this function
+      createUserProfileDocument(user);
+    });
   }
 
   componentWillUnmount(){

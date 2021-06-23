@@ -16,6 +16,37 @@ const config = {
     measurementId: "G-YCYNQCM22C"
   }
 
+//Creates a new user in the firestore database - takes the user authentication object we get back when authenticating with firebase and uses it to create a user in the firestore database, additonalData is any additonal data we might need
+export const createUserProfileDocument = async (userAuth, additionalData) =>{
+  //Exits function if user is not signed in - i.e. if the user auth object from firebase does not exist then exit from function
+  if(!userAuth) return;
+  //References the document for this user in the firestore databse - async request, looks in the collection "users" then looks for the document that matches the user id (this is the id generted by firebase when the user authenticates), at this point we do not yet have the data for the user
+  const userRef = firestore.doc(`users/${userAuth.uid}`);
+  //Pulls the data for this user from the firestore database - performs a GET request on the document for this user
+  const snapShot = await userRef.get();
+  //If the user does not exist in the firestore database - i.e. if there is no data in the firestore database
+  if(!snapShot.exists){
+    //Deconstruct the displayName and email from userAuth
+    const {displayName, email} = userAuth;
+    //Save the current date and time
+    const createdAt = new Date();
+    try{
+      //Create a new user in the firestore database - async request, uses the below data and creates a new document for the user
+      await userRef.set({
+        displayName,
+        email,
+        createdAt,
+        ...additionalData
+      })
+    }
+    catch(error){
+      console.log('error creating user', error.message);
+    }
+  }
+  //Returns userRef - can be used in code elsewhere
+  return userRef;
+}
+
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();
