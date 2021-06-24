@@ -20,9 +20,24 @@ class App extends React.Component {
 
   componentDidMount(){
     //Listens to changes in authentication on firebase - uses an Open Subscription, whenever there is a change in authentication (e.g. a user logs in/out) firebase sends a message saying the authentication state has changed
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async user =>{
-      //Executes the create a new user function - passes the user authentication object we get from firebase into this function
-      createUserProfileDocument(user);
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth =>{
+      //If the user is signed in - i.e. if there is a userAuth object
+      if (userAuth){
+        //Executes the create a new user function and saves the user document reference- passes the user authentication object we get from firebase into this function
+        const userRef = await createUserProfileDocument(userAuth);
+        //Saves the data stored in the document for this user to the state of this component - onSnapshot() subscribes/listens to the document for this user, on the inital call we get the current contents of the document, then each time the content changes another call updates the document snapshot
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser:{
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          });
+        });
+      }else{
+        //Set state to null - there is no user auth object
+        this.setState({currentUser: userAuth})
+      }
     });
   }
 
