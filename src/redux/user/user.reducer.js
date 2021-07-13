@@ -1,3 +1,5 @@
+import {UserActionTypes} from './user.types';
+
 //Sets a value for the inital state
 const INITAL_STATE = {
   currentUser: null
@@ -7,7 +9,7 @@ const INITAL_STATE = {
 const userReducer = (state = INITAL_STATE, action) => {
   //Determines if the reducer cares about the action by looking at action.type
   switch(action.type){
-    case 'SET_CURRENT_USER':
+    case UserActionTypes.SET_CURRENT_USER:
       //Spreads in/copies state, updates currentUser prop with the action payload and returns a new state object
       return{
         ...state,
