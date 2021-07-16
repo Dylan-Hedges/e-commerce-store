@@ -1,4 +1,5 @@
 import CartActionTypes from './cart.types';
+import {addItemToCart} from './cart.utils';
 
 //Sets the inital state for the Global State
 const INITAL_STATE = {
@@ -16,11 +17,11 @@ const cartReducer = (state = INITAL_STATE, action) => {
         ...state,
         hidden: !state.hidden
       };
-      //Adds a new item when user clicks add to cart button - creates a new array for cartItems, spreads in existing cartItems and adds the new item to the end of the array (new item recieved in action.payload)
+      //Adds a new item when user clicks add to cart button - executes the addItemToCart( ) function
       case CartActionTypes.ADD_ITEM:
         return{
           ...state,
-          cartItems: [...state.cartItems, action.payload]
+          cartItems: addItemToCart(state.cartItems, action.payload)
         }
       default:
         return state;
