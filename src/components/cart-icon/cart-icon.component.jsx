@@ -5,11 +5,11 @@ import {ReactComponent as ShoppingIcon} from '../../assets/shopping-bag.svg';
 import './cart-icon.styles.scss';
 
 //This is the shopping cart icon in the header
-const CartIcon = ({toggleCartHidden}) => (
+const CartIcon = ({toggleCartHidden, itemCount}) => (
   //Executes the toggleCartHidden action creator when clicked - this action is used to toggle the hide/show state for the shopping cart dropdown menu
   <div className='cart-icon' onClick={toggleCartHidden}>
     <ShoppingIcon className='shopping-icon'/>
-      <span className='item-count'>0</span>
+      <span className='item-count'>{itemCount}</span>
   </div>
 );
 
@@ -19,4 +19,12 @@ const mapDispatchToProps = dispatch => ({
   toggleCartHidden: () => dispatch(toggleCartHidden())
 });
 
-export default connect(null, mapDispatchToProps)(CartIcon);
+//Calculates the total quantity of items in the cart and maps it (itemCount) to the props of this component
+const mapStateToProps = ({cart: {cartItems}}) => ({
+  //.reducer( ) iterates over cartItems, accumlates the quantities for the items and returns a single value, this is mapped to itemCount and then displayed on our CartIcon
+  itemCount: cartItems.reduce(
+    (accumaltedQuantity, cartItem) => accumaltedQuantity + cartItem.quantity, 0
+  )
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CartIcon);
