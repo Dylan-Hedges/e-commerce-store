@@ -9,6 +9,12 @@ export const selectCartItems = createSelector(
   cart => cart.cartItems
 );
 
+//Selector that returns the current state of the cart dropdown menu (hidden/not hidden)
+export const selectCartHidden = createSelector(
+  [selectCart],
+  cart => cart.hidden
+);
+
 //Selector that calculates the quantity of items in the cart - used to display the quantity of items on the shopping cart icon, recieves all the cart items returned from the [selectCartItems] selector
 export const selectCartItemsCount = createSelector(
   [selectCartItems],

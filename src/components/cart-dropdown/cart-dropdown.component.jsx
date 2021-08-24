@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import {createStructuredSelector} from 'reselect';
+
 import CustomButton from '../custom-button/custom-button.component';
 import CartItem from '../cart-item/cart-item.component';
 import {selectCartItems} from '../../redux/cart/cart.selectors';
@@ -17,9 +19,9 @@ const CartDropdown = ({cartItems}) => (
   </div>
 );
 
-//Maps the global state to this component - saves cart items to a cartItems prop on this component
-const mapStateToProps = (state) => ({
-  cartItems: selectCartItems(state)
+//Maps the global state to this component - saves cart items to a cartItems prop on this component, createStructuredSelector is a quick way to execute multiple selectors and passes the global state into each selector
+const mapStateToProps = createStructuredSelector({
+  cartItems: selectCartItems
 });
 
 export default connect(mapStateToProps)(CartDropdown);

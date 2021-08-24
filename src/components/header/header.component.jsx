@@ -1,9 +1,15 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
+import {createStructuredSelector} from 'reselect';
+
 import {auth} from '../../firebase/firebase.utils';
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
+import {selectCartHidden} from '../../redux/cart/cart.selectors';
+import {selectCurrentUser} from '../../redux/user/user.selectors';
+
+
 import {ReactComponent as Logo} from '../../assets/crown.svg';
 import './header.styles.scss';
 
@@ -31,10 +37,10 @@ const Header = ({currentUser, hidden}) => (
   </div>
 );
 
-//Maps the Redux Store global state to this component - user is used for sign in/sign out, cart is used for the shopping cart dropdown menu
-const mapStateToProps = ({user: {currentUser}, cart: {hidden}}) => ({
-  currentUser,
-  hidden
+//Maps the result of the selectCurrentUser & selectCartHidden selectors to the currentUser & hidden props of this component, currentUser is used for sign in/out, hidden is used to hide the shopping cart menu, createStructuredSelector is a quick way to execute multiple selectors and passes the global state into each selector
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser,
+  hidden: selectCartHidden
 });
 
 export default connect(mapStateToProps)(Header);
