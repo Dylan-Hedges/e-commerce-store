@@ -6,11 +6,13 @@ import {withRouter} from 'react-router-dom';
 import CustomButton from '../custom-button/custom-button.component';
 import CartItem from '../cart-item/cart-item.component';
 import {selectCartItems} from '../../redux/cart/cart.selectors';
+import {toggleCartHidden} from '../../redux/cart/cart.actions.js';
+
 import './cart-dropdown.styles.scss';
 
 //This is the dropdown menu when clicking shopping cart icon - .map( ) over the cartItems prop and uses <CartItem> to display them in the cart
-const CartDropdown = ({cartItems, history}) => (
-  //Displays cart items in the dropdown or a message - if cartItems.length is not greater than 0 it evaluates to false and displays the messsage, if it is greater than 0 it displays the cart items
+const CartDropdown = ({cartItems, history, dispatch}) => (
+  //Displays cart items in the dropdown or a message - if cartItems.length is not greater than 0 it evaluates to false and displays the messsage, if it is greater than 0 it displays the cart items, when we use connect() it provides the component with dispatch functionality (passed into the component as a prop), this means we can dispatch an action that toggles the hide dropdown state and hides the dropdown menu without needing to write mapDispatchToProps()
   <div className='cart-dropdown'>
     <div className='cart-items'>
       {
@@ -22,7 +24,12 @@ const CartDropdown = ({cartItems, history}) => (
           <span className='empty-message'>Your cart is empty</span>
       )}
     </div>
-    <CustomButton onClick={() => history.push('/checkout')}>GO TO CHECKOUT</CustomButton>
+    <CustomButton onClick={() => {
+      history.push('/checkout');
+      dispatch(toggleCartHidden());
+    }}>
+      GO TO CHECKOUT
+    </CustomButton>
   </div>
 );
 
