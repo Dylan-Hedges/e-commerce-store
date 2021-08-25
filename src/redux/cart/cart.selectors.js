@@ -26,3 +26,15 @@ export const selectCartItemsCount = createSelector(
         0
       )
 );
+
+//Selector that calculates the total price of all the items in the cart - used to display the total price of all the items in the checkout page, recieves all the cart items returned from the [selectCartItems] selector
+export const selectCartTotal = createSelector(
+    [selectCartItems],
+    cartItems =>
+      //Returns total quantity of all cart items - .reducer( ) iterates over cartItems, accumlates the quantities for the items and returns a single value, this is mapped to itemCount and then displayed on our CartIcon
+      cartItems.reduce(
+        (accumaltedQuantity, cartItem) =>
+          accumaltedQuantity + cartItem.quantity * cartItem.price,
+          0
+        )
+)
