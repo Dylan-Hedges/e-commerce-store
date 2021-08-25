@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {createStructuredSelector} from 'reselect';
+import {withRouter} from 'react-router-dom';
 
 import CustomButton from '../custom-button/custom-button.component';
 import CartItem from '../cart-item/cart-item.component';
@@ -8,14 +9,20 @@ import {selectCartItems} from '../../redux/cart/cart.selectors';
 import './cart-dropdown.styles.scss';
 
 //This is the dropdown menu when clicking shopping cart icon - .map( ) over the cartItems prop and uses <CartItem> to display them in the cart
-const CartDropdown = ({cartItems}) => (
+const CartDropdown = ({cartItems, history}) => (
+  //Displays cart items in the dropdown or a message - if cartItems.length is not greater than 0 it evaluates to false and displays the messsage, if it is greater than 0 it displays the cart items
   <div className='cart-dropdown'>
     <div className='cart-items'>
-      {cartItems.map(cartItem => (
-        <CartItem key={cartItem.id} item={cartItem}/>
-        ))}
+      {
+        cartItems.length ? (
+          cartItems.map(cartItem => (
+            <CartItem key={cartItem.id} item={cartItem}/>
+          ))
+        ) : (
+          <span className='empty-message'>Your cart is empty</span>
+      )}
     </div>
-    <CustomButton>GO TO CHECKOUT</CustomButton>
+    <CustomButton onClick={() => history.push('/checkout')}>GO TO CHECKOUT</CustomButton>
   </div>
 );
 
@@ -24,4 +31,5 @@ const mapStateToProps = createStructuredSelector({
   cartItems: selectCartItems
 });
 
-export default connect(mapStateToProps)(CartDropdown);
+//withRouter() provides routing functionality, connect() connects the component to the Redux Store
+export default withRouter(connect(mapStateToProps)(CartDropdown));
