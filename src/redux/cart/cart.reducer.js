@@ -1,5 +1,5 @@
 import CartActionTypes from './cart.types';
-import {addItemToCart} from './cart.utils';
+import {addItemToCart, removeItemFromCart} from './cart.utils';
 
 //Sets the inital state for the Global State
 const INITAL_STATE = {
@@ -17,20 +17,26 @@ const cartReducer = (state = INITAL_STATE, action) => {
         ...state,
         hidden: !state.hidden
       };
-      //Adds a new item when user clicks add to cart button - executes the addItemToCart( ) function
-      case CartActionTypes.ADD_ITEM:
-        return{
-          ...state,
-          cartItems: addItemToCart(state.cartItems, action.payload)
+    //Adds a new item when user clicks add to cart button - executes the addItemToCart( ) function
+    case CartActionTypes.ADD_ITEM:
+      return{
+        ...state,
+        cartItems: addItemToCart(state.cartItems, action.payload)
+      }
+    //Removes an item (decreases quantity) when user clicks on quantity arrow on checkout page
+    case CartActionTypes.REMOVE_ITEM:
+      return{
+        ...state,
+        cartItems: removeItemFromCart(state.cartItems, action.payload)
+      }
+    //Removes item from the cart when the user clicks the cross/delete icon on the checkout page - recieves the id of the item we want to remove (action.payload.id), compares it to the id of items in the cart, if it is NOT equal it puts that item in a new array (keeps it) otherwise it filters it out
+    case CartActionTypes.CLEAR_ITEM_FROM_CART:
+      return{
+        ...state,
+        cartItems: state.cartItems.filter(cartItem => cartItem.id !== action.payload.id)
         }
-      //Removes item from the cart when the user clicks the cross/delete icon on the checkout page - recieves the id of the item we want to remove (action.payload.id), compares it to the id of items in the cart, if it is NOT equal it puts that item in a new array (keeps it) otherwise it filters it out
-      case CartActionTypes.CLEAR_ITEM_FROM_CART:
-        return{
-          ...state,
-          cartItems: state.cartItems.filter(cartItem => cartItem.id !== action.payload.id)
-          }
-      default:
-        return state;
+    default:
+      return state;
   }
 };
 
