@@ -23,6 +23,12 @@ const cartReducer = (state = INITAL_STATE, action) => {
           ...state,
           cartItems: addItemToCart(state.cartItems, action.payload)
         }
+      //Removes item from the cart when the user clicks the cross/delete icon on the checkout page - recieves the id of the item we want to remove (action.payload.id), compares it to the id of items in the cart, if it is NOT equal it puts that item in a new array (keeps it) otherwise it filters it out
+      case CartActionTypes.CLEAR_ITEM_FROM_CART:
+        return{
+          ...state,
+          cartItems: state.cartItems.filter(cartItem => cartItem.id !== action.payload.id)
+          }
       default:
         return state;
   }

@@ -1,18 +1,28 @@
 import React from 'react';
+import {connect} from 'react-redux';
+
+import {clearItemFromCart} from '../../redux/cart/cart.actions';
 
 import './checkout-item.styles.scss';
 
 //Displays items on the checkout page - displays items user has added to cart on the page, recieves cart items from checkout.component.jsx
-const CheckoutItem = ({ cartItem:{name, imageUrl, price, quantity}}) => (
-  <div className='checkout-item'>
-    <div className='image-container'>
-      <img src={imageUrl} alt='item'/>
+const CheckoutItem = ({ cartItem, clearItem }) => {
+  const {name, imageUrl, price, quantity} = cartItem;
+  return(
+    <div className='checkout-item'>
+      <div className='image-container'>
+        <img src={imageUrl} alt='item'/>
+      </div>
+      <span className='name'>{name}</span>
+      <span className='quantity'>{quantity}</span>
+      <span className='price'>{price}</span>
+      <div className='remove-button' onClick={() => clearItem(cartItem)}>&#10005;</div>
     </div>
-    <span className='name'>{name}</span>
-    <span className='quantity'>{quantity}</span>
-    <span className='price'>{price}</span>
-    <div className='remove-button'>&#10005;</div>
-  </div>
-)
+  )};
 
-export default CheckoutItem;
+//Dispatchs an action that deletes the item from the cart
+const mapDispatchToProps = dispatch => ({
+  clearItem: item => dispatch(clearItemFromCart(item))
+})
+
+export default connect(null, mapDispatchToProps)(CheckoutItem);
