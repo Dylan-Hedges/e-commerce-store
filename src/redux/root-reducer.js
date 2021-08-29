@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 
 import userReducer from './user/user.reducer';
 import cartReducer from './cart/cart.reducer';
+import directoryReducer from './directory/directory.reducer';
 
 //Sets the configuration for reudx persist - key: 'root' is the point we want to start storing things, whitelist: ['cart'] are the reducers we want to store, we dont include 'user' as this is persisted by firebase
 const persistConfig = {
@@ -17,7 +18,8 @@ const persistConfig = {
 //Combines all the reducers - combines the objects returned from the reducers to form the new state object, K/V pairs for the state object are set here
 const rootReducer = combineReducers({
   user: userReducer,
-  cart: cartReducer
+  cart: cartReducer,
+  directory: directoryReducer
 });
 
 //Exports the root reducer and provides it with persist capability
